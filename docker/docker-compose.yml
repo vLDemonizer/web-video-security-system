@@ -1,0 +1,24 @@
+version: '2'
+
+volumes:
+  db_cams:
+
+services:
+  db_cams:
+    image: cams:db
+    volumes:
+        - db_cams:/var/lib/postgresql/data
+    environment:
+        - PGDATA=/var/lib/postgresql/data/pgdata
+        - POSTGRES_USER=camy
+        - POSTGRES_PASSWORD=camo
+  cams:
+    image: cams:app
+    ports:
+      - "8000:8000"
+    volumes:
+        - /home/demonizer/projects/security/cams:/root/cams
+    environment:
+        - DB_USER=camy
+        - DB_PASSWORD=camo
+        - DB_HOST=db_cams
