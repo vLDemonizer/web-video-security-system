@@ -1,16 +1,19 @@
-import React, {Component} from 'react'
+import React, {Component} from 'react';
+import RecordRTC from 'recordrtc';
+ 
 
 class Camera extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            cameras: []
-        }
+            cameras: [],
+            socket: new WebSocket('ws://' + host || '127.0.0.1:8000' + '/video/stream/')
+        };
         
-        this.getCams = this.getCams.bind(this)
-        this.fetchStream = this.fetchStream.bind(this)
-        this.addStreams = this.addStreams.bind(this)
-        this.getStreams = this.getStreams.bind(this)
+        this.getCams = this.getCams.bind(this);
+        this.fetchStream = this.fetchStream.bind(this);
+        this.addStreams = this.addStreams.bind(this);
+        this.getStreams = this.getStreams.bind(this);
     }
 
     getCams() {
@@ -67,9 +70,30 @@ class Camera extends Component {
     }
 
     componentDidMount() {
+        let intervals = [];
+        let records = [];
+        const options = {
+            mimeType: 'video/webm',
+            bitsPerSecond: 128000 
+        };
         this.getStreams().then(cameras => {
-            this.setState({cameras: cameras})
+            this.setState({cameras: cameras});
+            for (camera in cameras) {
+                rec = new RecordRTC(camera, options);
+                rec.startRecording();
+                records.push(rec);
+            }
+            for (record in records){
+                intervals.push(setInterval(records => {
+                    records.stopRecording(audioVideoWebMURL => {
+                        let recordedBlob = records[i].getBlob();
+                        console.log(recordedBlob);
+                    })
+                }, 60000))
+            }
         })
+
+        
     }
 
     render() {

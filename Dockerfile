@@ -5,12 +5,12 @@ RUN apt-get update && \
     apt-get update --fix-missing && \
     apt-get install -y \
         apt-utils \
+        libgtk2.0-0 \
         bash-completion \
         git \
+        curl \
         python3-dev \
         python3-pip \
-        python-pip \
-        python3-psycopg2 \
         python3-software-properties \
         supervisor \
         vim 
@@ -20,6 +20,14 @@ ADD ./requirements.txt /tmp/
 RUN pip3 install --timeout 1000 --upgrade pip
 
 RUN pip3 install --timeout 1000 -r /tmp/requirements.txt
+
+RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
+
+RUN bash nodesource_setup.sh
+
+RUN apt-get install -y nodejs
+
+RUN apt-get install -y build-essential
 
 RUN service supervisor stop
 

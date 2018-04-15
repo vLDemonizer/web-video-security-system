@@ -1,6 +1,7 @@
+moviepy==0.2.3.2
 django==2.0.3
 djangorestframework==3.7.7
 ipython==5.5.0
 ipython-genutils==0.2.0
-psycopg2==2.7.4
-uWSGI==2.0.17
+channels_redis==2.1.1
+channels==2.0.2

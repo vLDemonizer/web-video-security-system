@@ -2,7 +2,7 @@
 
 cd /root/cams/backend
 
-pip3 install -r /tmp/pip3-requirements.txt
+pip3 install -r /tmp/requirements.txt
 
 python3 manage.py makemigrations --noinput
 
