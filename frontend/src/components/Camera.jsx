@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import RecordRTC from 'recordrtc';
-import {util} from 'node-forge';
+import axios from 'axios';
+
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
 class Camera extends Component {
     constructor(props) {
@@ -83,7 +86,13 @@ class Camera extends Component {
                     'filename.webm', {
                     type: 'video/webm'
                 });
-                console.log(file);
+                let form = new FormData();
+                form.append('video', file);
+                form.append('videoId', 23);
+                form.append('nodeId', 34);
+                axios.post('http://192.168.0.106:8000/video-stream/', form)
+                    .then(response => console.log(response))
+                    .catch(error => console.log(error))
                 
             });
             record.startRecording();

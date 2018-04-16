@@ -4,6 +4,8 @@ node_modules
 dist
 builds
 staticfiles
+media
 *.pyc
 *-lock.json
 *.sqlite3
+*.webm
