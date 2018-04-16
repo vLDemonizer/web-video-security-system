@@ -5,5 +5,5 @@ dist
 builds
 staticfiles
 *.pyc
-package-lock.json
+*-lock.json
 *.sqlite3
