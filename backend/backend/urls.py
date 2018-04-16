@@ -21,4 +21,5 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='index'),
+    path('video-stream', views.handleVideoFeed, name='video-feed'),
 ]

@@ -29,7 +29,9 @@ ALLOWED_HOSTS = ['*']
 
 # Env vars
 for var in [
-    'REDIS_HOST',
+    'DB_HOST',
+    'DB_USER',
+    'DB_PASSWORD',
 ]:
     globals()[var] = os.getenv(var)
 
@@ -46,7 +48,6 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    'channels',
 ]
 
 OUR_APPS = [
@@ -91,13 +92,14 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'cams_db',
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': '5432',
     }
 }
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -140,20 +142,5 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 STATIC_ROOT = 'staticfiles'
-
-# Channel layer definitions
-# http://channels.readthedocs.io/en/latest/topics/channel_layers.html
-CHANNEL_LAYERS = {
-    "default": {
-        # This example app uses the Redis channel layer implementation channels_redis
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [('redis', 6379)],
-        },
-    },
-}
-
-# ASGI_APPLICATION should be set to your outermost router
-ASGI_APPLICATION = 'backend.routing.application'
 
 CSRF_COOKIE_NAME = "csrftoken"

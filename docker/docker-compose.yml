@@ -1,22 +1,24 @@
 version: '2'
 
 volumes:
-  redisdata:
+  camsdata:
 
 services:
-  redis:
-    image: redis:4.0.9
+  db_cams:
+    image: cams:db
     volumes:
-      - 'redisdata:/data'
+        - camsdata:/var/lib/postgresql/data
+    environment:
+        - PGDATA=/var/lib/postgresql/data/pgdata
+        - POSTGRES_USER=cams
+        - POSTGRES_PASSWORD=camspass
   cams:
     image: cams:app
     ports:
       - "8000:8000"
-      - "3000:3000"
-      - "8080:8080"
     volumes:
         - /home/demonizer/projects/security/cams:/root/cams
     environment:
-      - REDIST_HOST=redis
-    links:
-      - redis
+        - DB_USER=cams
+        - DB_PASSWORD=camspass
+        - DB_HOST=db_cams

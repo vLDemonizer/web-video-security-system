@@ -1,1 +1,1 @@
-FROM postgres:9.6.1
+FROM postgres:10.3

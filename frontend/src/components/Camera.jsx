@@ -1,13 +1,12 @@
 import React, {Component} from 'react';
 import RecordRTC from 'recordrtc';
- 
+import {util} from 'node-forge';
 
 class Camera extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            cameras: [],
-            socket: new WebSocket('ws://' + host || '127.0.0.1:8000' + '/video/stream/')
+            cameras: []
         };
         
         this.getCams = this.getCams.bind(this);
@@ -45,7 +44,7 @@ class Camera extends Component {
                     resolve(mediaStream)
                 })
                 .catch(error => {
-                    reject(error)
+                    console.log(error)
                 });
         })
     }
@@ -76,30 +75,39 @@ class Camera extends Component {
             mimeType: 'video/webm',
             bitsPerSecond: 128000 
         };
+        const handleRecorder = record => {
+            record.stopRecording(audioVideoWebMURL => {
+                let recordedBlob = record.getBlob();
+                let file = new File(
+                    [recordedBlob], 
+                    'filename.webm', {
+                    type: 'video/webm'
+                });
+                console.log(file);
+                
+            });
+            record.startRecording();
+        }
         this.getStreams().then(cameras => {
             this.setState({cameras: cameras});
-            for (camera in cameras) {
-                rec = new RecordRTC(camera, options);
+            for (let i = 0; i < cameras.length; i++) {
+                let rec = new RecordRTC(cameras[i].src, options);
                 rec.startRecording();
                 records.push(rec);
             }
-            for (record in records){
-                intervals.push(setInterval(records => {
-                    records.stopRecording(audioVideoWebMURL => {
-                        let recordedBlob = records[i].getBlob();
-                        console.log(recordedBlob);
-                    })
-                }, 60000))
+            for (let i = 0; i < records.length; i++){
+                intervals.push(setInterval(() => handleRecorder(records[i]), 6000))
             }
+            
         })
 
         
     }
 
     render() {
-        let videos = this.state.cameras.map(camera => <video key={camera.id} src={camera.url}></video>)
-        return videos
+        let videos = this.state.cameras.map(camera => <video key={camera.id} src={camera.url}></video>);
+        return videos;
     }
 }
 
-export default Camera
+export default Camera;

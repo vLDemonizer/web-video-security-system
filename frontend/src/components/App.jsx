@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Camera from './Camera.jsx'
 
 class App extends React.Component {
+  
   render() {
     return (
       <div>
