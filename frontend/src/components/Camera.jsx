@@ -75,7 +75,7 @@ class Camera extends Component {
         let intervals = [];
         let records = [];
         const options = {
-            mimeType: 'video/webm',
+            mimeType: 'video/webm\;codecs=h264',
             bitsPerSecond: 128000 
         };
         const handleRecorder = record => {
@@ -83,8 +83,8 @@ class Camera extends Component {
                 let recordedBlob = record.getBlob();
                 let file = new File(
                     [recordedBlob], 
-                    'filename.webm', {
-                    type: 'video/webm'
+                    'filename.h264', {
+                    type: 'video/webm\;codecs=h264'
                 });
                 let form = new FormData();
                 form.append('video', file);
