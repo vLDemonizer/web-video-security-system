@@ -49,4 +49,12 @@ def handleVideoFeed(request):
 def login(request):
     username = request.POST.get('username')
     password = request.POST.get('pass')
-    print(username + ' ' + password)
+    response = False
+
+    user = User.objects.all().filter(username=username)
+    
+
+    if len(user) > 0 and username == user[0].username and user[0].check_password(password):
+        response = True
+    
+    return JsonResponse({'login': response})

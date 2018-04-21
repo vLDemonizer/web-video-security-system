@@ -90,7 +90,7 @@ class Camera extends Component {
                 form.append('video', file);
                 form.append('videoId', 23);
                 form.append('nodeId', 34);
-                axios.post('http://192.168.0.106:8000/video-stream/', form)
+                axios.post('http://192.168.0.105:8000/video-stream/', form)
                     .then(response => console.log(response))
                     .catch(error => console.log(error))
                 
@@ -115,6 +115,13 @@ class Camera extends Component {
 
     render() {
         let videos = this.state.cameras.map(camera => <video key={camera.id} src={camera.url}></video>);
+        videos.push(
+            <button onClick={() => {
+                this.props.changeComponentUp();
+            }}>
+            Regresate
+            </button>
+        );
         return videos;
     }
 }

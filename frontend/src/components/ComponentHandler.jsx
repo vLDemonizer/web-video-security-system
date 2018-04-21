@@ -17,7 +17,6 @@ class ComponentHandler extends Component {
     }
 
     changeComponentDown() {
-        console.log(this.state);
         if (arguments.length === 0) {
             if (this.state.index === this.components.length) {
                 this.setState({

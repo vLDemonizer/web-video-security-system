@@ -19,12 +19,12 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
+            error: ''
         };
     }
     
     onChange(type, e) {
         var data = e.target.value;
-        console.log(type);
         if (type === "username"){
             this.setState({ username: data });
         }
@@ -38,9 +38,17 @@ class Login extends Component {
         form.append('username', this.state.username);
         form.append('pass', this.state.password);
         axios.post('http://192.168.0.105:8000/log-in/', form)
-            .then(response => console.log(response))
+            .then(response => {
+                if(response.data.login === true){
+                    this.props.changeComponentDown();
+                }
+                else{
+                    this.setState({
+                        error: <h5 style={{ color: 'red' }}>User not found!</h5>
+                    });
+                }
+            })
             .catch(error => console.log(error))
-        this.props.changeComponentDown();
     }
 
     render() {
@@ -87,6 +95,15 @@ class Login extends Component {
                                 </span>
                             </div>
                             
+                            <div style={{ marginLeft: '33%' }}>
+                            {
+                                this.state.error === '' ?
+                                ''
+                                :
+                                this.state.error
+                            }
+                            </div>
+
                             <div className="container-login100-form-btn">
                                 <Button className={'login100-form-btn'} onClick={this.onClick.bind(this)}>
                                     Login
