@@ -5,6 +5,7 @@ import subprocess
 import shlex
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.views.generic import TemplateView
 
@@ -44,3 +45,8 @@ def handleVideoFeed(request):
         new_video.write_videofile(file_mp4)
     
     return JsonResponse({'foo': video_id})
+
+def login(request):
+    username = request.POST.get('username')
+    password = request.POST.get('pass')
+    print(username + ' ' + password)
