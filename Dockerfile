@@ -13,8 +13,13 @@ RUN apt-get update && \
         python3-pip \
         python3-software-properties \
         supervisor \
-        gpac \
         vim 
+
+RUN apt-get install -y software-properties-common && \
+    add-apt-repository ppa:jonathonf/ffmpeg-3 && \
+    apt-get update --fix-missing && \
+    apt-get upgrade -y && \
+    apt-get install -y ffmpeg
 
 ADD ./requirements.txt /tmp/
 
@@ -23,14 +28,6 @@ RUN pip3 install --timeout 1000 --upgrade pip
 RUN pip3 install --timeout 1000 -r /tmp/requirements.txt
 
 RUN python3 -c "import imageio; imageio.plugins.ffmpeg.download()"
-
-RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh
-
-RUN bash nodesource_setup.sh
-
-RUN apt-get install -y --fix-missing nodejs
-
-RUN apt-get install -y --fix-missing build-essential
 
 RUN service supervisor stop
 

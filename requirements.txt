@@ -5,4 +5,4 @@ ipython==5.5.0
 ipython-genutils==0.2.0
 psycopg2-binary==2.7.4
 uWSGI==2.0.17
-imageio
+imageio==2.1.2
