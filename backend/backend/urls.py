@@ -25,5 +25,6 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('video-stream/', views.handleVideoFeed, name='video-feed'),
     path('log-in/', views.login, name='log-in'),
+    path('sign-up/', views.signup, name='sign-up'),
 ]   + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
