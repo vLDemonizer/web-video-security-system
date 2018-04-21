@@ -35,21 +35,27 @@ def handleVideoFeed(request):
         for chunk in video_file.chunks():
             video.write(chunk)
 
-    command = shlex.split(
-        "ffmpeg -fflags +genpts -i {0} -r 24 {1}".format(file_webm, file_new_mp4)
-    )
-    output = subprocess.check_output(command, stderr=subprocess.STDOUT)
-    print(output)
-    
     if os.path.exists(existing_file):
+        command = shlex.split(
+            "ffmpeg -fflags +genpts -i {0} -r 24 {1}".format(file_webm, file_new_mp4)
+        )
+        output = subprocess.check_output(command, stderr=subprocess.STDOUT)
+        print(output)
         existing_video = VideoFileClip(existing_file)
         new_video = VideoFileClip(file_new_mp4)
         concatenated = concatenate_videoclips([existing_video, new_video])
         concatenated.write_videofile(existing_file)
+        command = shlex.split("rm -r {0}".format(file_new_mp4))
+        output = subprocess.check_output(command, stderr=subprocess.STDOUT)
+        print(output)
+    else:
+        command = shlex.split(
+            "ffmpeg -fflags +genpts -i {0} -r 24 {1}".format(file_webm, existing_file)
+        )
+        output = subprocess.check_output(command, stderr=subprocess.STDOUT)
+        print(output)
+    
     command = shlex.split("rm -r {0}".format(file_webm))
-    output = subprocess.check_output(command, stderr=subprocess.STDOUT)
-    print(output)
-    command = shlex.split("rm -r {0}".format(file_new_mp4))
     output = subprocess.check_output(command, stderr=subprocess.STDOUT)
     print(output)
     
