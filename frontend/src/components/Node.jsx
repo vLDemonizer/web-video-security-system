@@ -19,18 +19,13 @@ class Node extends Component {
         this.inputRef = React.createRef();
 
         this.getNode = this.getNode.bind(this);
-        this.createNode = this.createNode.bind(this);
     }
 
     getNode(identifier) {
-        axios.get('/nodes/' + identifier)
-            .then(response => console.log(response))
-            .catch(error => this.setState({invalidInput: true}))
-    }
-
-    createNode(identifier) {
-        axios.post('/nodes/', {identifier: this.inputRef.current.value})
-            .then(response => console.log(response))
+        let form = new FormData();
+        form.append('identifier', identifier)
+        axios.post(this.props.ip + '/get-node/', form)
+            .then(response => this.props.setNode(response.data.root))
             .catch(error => this.setState({invalidInput: true}))
     }
 
@@ -57,7 +52,7 @@ class Node extends Component {
                             ref={this.nodeRef}
 
                         />
-                        <FormFeedback invalid>Node not Found! Wish to make a new node?</FormFeedback>
+                        <FormFeedback invalid>Node not Found! Contact IT for a new Node?</FormFeedback>
                         <FormText>The ID will be checked in the backend</FormText>
                     </FormGroup>
                     <div className="text-center">
@@ -66,10 +61,6 @@ class Node extends Component {
                                 this.getNode(this.inputRef.current.value)
                             }
                         }} >Submit</Button>
-                    </div>
-                    <br />
-                    <div className="text-center">
-                        <Button>Create Node</Button>
                     </div>
                 </Form>
             </Container>

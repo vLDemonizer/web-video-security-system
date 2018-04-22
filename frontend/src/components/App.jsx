@@ -20,7 +20,6 @@ class App extends React.Component {
   render() {
     const index = this.state.index;
     const ip = this.state.ip;
-    console.log(ip)
     switch (index) {
       case 0:
         return (
