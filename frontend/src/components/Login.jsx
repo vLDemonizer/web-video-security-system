@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Tilt from 'react-tilt'
+import Tilt from 'react-tilt';
 import { Button } from 'reactstrap';
  
 
@@ -37,10 +37,10 @@ class Login extends Component {
         let form = new FormData();
         form.append('username', this.state.username);
         form.append('pass', this.state.password);
-        axios.post('http://192.168.0.105:8000/log-in/', form)
+        axios.post(this.props.ip + '/log-in/', form)
             .then(response => {
                 if(response.data.login === true){
-                    this.props.changeComponentDown();
+                    this.props.setUser({user: this.state.username})
                 }
                 else{
                     this.setState({
@@ -111,7 +111,7 @@ class Login extends Component {
                             </div>
     
                             <div className="text-center p-t-136">
-                                <a className="txt2" href="#">
+                                <a className="txt2" href={this.props.ip + '/sign-up/'}>
                                     Create your Account
                                     <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
                                 </a>

@@ -29,7 +29,7 @@ class IpServerHandler extends Component {
                 invalidIp: false
             });
             axios.get(address)
-                .then(response => this.props.setIp(ip))
+                .then(response => this.props.setIp(address))
                 .catch(error => console.log(error))
         } else {
             this.setState({
