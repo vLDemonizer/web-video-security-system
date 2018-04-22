@@ -9,3 +9,6 @@ media
 *-lock.json
 *.sqlite3
 *.webm
+docker-compose-copy.yml
+.vscode/settings.json
+.vscode/launch.json
