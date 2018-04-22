@@ -19,7 +19,7 @@ from system import models, serializers
 
 
 class IndexView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'base.html'
 
 
 class NodeViewSet(ModelViewSet):
