@@ -1,17 +1,40 @@
 import '../assets/css/App.css';
 import React, { Component } from 'react';
-import Camera from './Camera.jsx'
+import IpServerHandler from './IpServerHandler.jsx'
+import Node from './Node.jsx';
+import Cameras from './Cameras.jsx';
+
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      indexComponent: 0,
+      ip: '',
+      node: '',
+
+    };
+  }
   
   render() {
-    return (
-      <div>
-        <h1>Hello, Electron!</h1>
-        <p>I hope you enjoy using basic-electron-react-boilerplate to start your dev off right!</p>
-      <Camera />
-      </div>
-    );
+    if (this.state.ip && this.state.indexComponent === 0) {
+      return (
+        <Node 
+          ip={this.state.ip} 
+          setNode={(node) => this.setState({
+            node: node,
+            indexComponent: this.state.indexComponent + 1
+          })} 
+        />
+      );
+    } else if (this.state.indexComponent === 0) {
+      return (
+        <IpServerHandler setIp={(ip) => this.setState({ip: ip})} />
+      );
+    } else if (this.state.indexComponent === 1) {
+      return <Cameras ip={this.state.ip} node={this.state.node} />
+    }
+    return <div></div>;
   }
 }
 

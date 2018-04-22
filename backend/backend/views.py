@@ -9,10 +9,19 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 
 from moviepy.editor import VideoFileClip, concatenate_videoclips
+from rest_framework.viewsets import ModelViewSet
+
+from . import models, serializers
 
 
 class IndexView(TemplateView):
     template_name = 'index.html'
+
+
+class NodeViewSet(ModelViewSet):
+    lookup_field = 'identifier'
+    queryset = models.Node.objects.all()
+    serializer_class = serializers.NodeSerializer()
 
 
 def handleVideoFeed(request):

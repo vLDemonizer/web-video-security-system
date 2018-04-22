@@ -5,7 +5,7 @@ import axios from 'axios';
 axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 
-class Camera extends Component {
+class Cameras extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -119,4 +119,4 @@ class Camera extends Component {
     }
 }
 
-export default Camera;
+export default Cameras;
