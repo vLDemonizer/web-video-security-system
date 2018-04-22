@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 
 from moviepy.editor import VideoFileClip, concatenate_videoclips
@@ -25,12 +25,18 @@ class IndexView(TemplateView):
 class NodeViewSet(ModelViewSet):
     lookup_field = 'identifier'
     queryset = models.Node.objects.all()
-    serializer_class = serializers.NodeSerializer()
+    serializer_class = serializers.NodeSerializer
+
+
+def getNode(request):
+    identifier = request.POST.get('identifier')
+    print(identifier)
+    node = get_object_or_404(models.Node, identifier=identifier)
+    return JsonResponse({identifier: node.identifier})
 
 
 def handleVideoFeed(request):
     video_file = request.FILES.get('video')
-    print(video_file)
     video_id = request.POST.get('videoId')
     node_id = request.POST.get('nodeId')
     date = datetime.date.today()
