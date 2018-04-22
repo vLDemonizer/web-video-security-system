@@ -112,8 +112,8 @@ class Login extends Component {
     
                             <div className="text-center p-t-136">
                                 <a className="txt2" href={this.props.ip + '/sign-up/'}>
-                                    Create your Account
-                                    <i className="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
+                                    
+                                    <i className="fa m-l-5" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </form>
