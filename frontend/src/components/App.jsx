@@ -9,7 +9,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      indexComponent: 0,
+      index: 0,
       ip: '',
       node: '',
 
@@ -17,21 +17,25 @@ class App extends React.Component {
   }
   
   render() {
-    if (this.state.ip && this.state.indexComponent === 0) {
+    const index = this.state.index;
+    if (index === 0) {
       return (
         <Node 
           ip={this.state.ip} 
           setNode={(node) => this.setState({
             node: node,
-            indexComponent: this.state.indexComponent + 1
+            index: this.state.index + 1
           })} 
         />
       );
-    } else if (this.state.indexComponent === 0) {
+    } 
+    else if (index === 1) {
+
+    } else if (index === 2) {
       return (
         <IpServerHandler setIp={(ip) => this.setState({ip: ip})} />
       );
-    } else if (this.state.indexComponent === 1) {
+    } else if (index === 3) {
       return <Cameras ip={this.state.ip} node={this.state.node} />
     }
     return <div></div>;

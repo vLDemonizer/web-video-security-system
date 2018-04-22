@@ -52,7 +52,6 @@ THIRD_PARTY_APPS = [
 
 OUR_APPS = [
     'system',
-    'backend',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + OUR_APPS

@@ -11,7 +11,7 @@ from django.views.generic import TemplateView
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 from rest_framework.viewsets import ModelViewSet
 
-from . import models, serializers
+from system import models, serializers
 
 
 class IndexView(TemplateView):
