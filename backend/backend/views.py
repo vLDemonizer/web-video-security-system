@@ -90,14 +90,12 @@ class CameraApiView(APIView):
         return Response(data=ser.data)
  
 
-@login_required
 def getNode(request):
     identifier = request.POST.get('identifier')
-    print(identifier)
     node = get_object_or_404(models.Node, identifier=identifier)
     return JsonResponse({identifier: node.identifier})
 
-@login_required
+
 def handleVideoFeed(request):
     video_file = request.FILES.get('video')
     camera_identifier = request.POST.get('camera')
