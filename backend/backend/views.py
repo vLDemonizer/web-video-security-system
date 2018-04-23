@@ -13,6 +13,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 
 from moviepy.editor import VideoFileClip, concatenate_videoclips
+
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from system import models, serializers
@@ -28,6 +32,31 @@ class NodeViewSet(ModelViewSet):
     serializer_class = serializers.NodeSerializer
 
 
+class CameraApiView(APIView):
+    renderer_classes = (JSONRenderer,)
+
+    def get(self, request, *args, **kwargs):
+        node = models.Node.objects.get(identifier=kwargs['identifier'])
+        ser = serializers.CameraSerializer(
+            models.Camera.objects.filter(node=node), many=True
+        )
+        return Response(data=ser.data)
+    
+    def post(self, request, *args, **kwargs):
+        node = models.Node.objects.get(identifier=kwargs['identifier'])
+        identifier = request.POST.get('identifier')
+        description = request.POST.get('description')
+        camera, created = models.Camera.objects.get_or_create(
+            identifier=identifier,
+            node=node
+        )
+        print(identifier,description, camera)
+        camera.description = description
+        camera.save()
+        ser = serializers.CameraSerializer(camera)
+        return Response(data=ser.data)
+ 
+
 def getNode(request):
     identifier = request.POST.get('identifier')
     print(identifier)
@@ -37,11 +66,13 @@ def getNode(request):
 
 def handleVideoFeed(request):
     video_file = request.FILES.get('video')
-    video_id = request.POST.get('videoId')
-    node_id = request.POST.get('nodeId')
+    camera_identifier = request.POST.get('camera')
+    camera = models.Camera.objects.get(identifier=camera_identifier)
     date = datetime.date.today()
-    path = '{0}/media/{1}/{2}'.format(settings.BASE_DIR, node_id, video_id)
-    file = '{0}/{1}'.format(path, date)
+    day, created = models.Day.objects.get_or_create(name=date, camera=camera)
+    print(day.path, day.url)
+    path = day.folder_path
+    file = day.path
     file_webm = file + '.webm'
     file_new_mp4 = file + '-new.mp4'
     existing_file = file + '.mp4'
@@ -78,7 +109,7 @@ def handleVideoFeed(request):
     output = subprocess.check_output(command, stderr=subprocess.STDOUT)
     print(output)
     
-    return JsonResponse({'foo': video_id})
+    return JsonResponse({'foo': True})
 
 def login(request):
     username = request.POST.get('username')

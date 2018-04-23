@@ -30,6 +30,7 @@ urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
     path('video-stream/', views.handleVideoFeed, name='video-feed'),
     path('get-node/', views.getNode, name='get-node'),
+    path('get-cameras/<identifier>/', views.CameraApiView.as_view(), name='api-cameras'),
     path('log-in/', views.login, name='log-in'),
     path('sign-up/', views.signup, name='sign-up'),
 ] 

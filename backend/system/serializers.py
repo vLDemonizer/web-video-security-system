@@ -9,3 +9,9 @@ class NodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Node
         fields = '__all__'
+
+
+class CameraSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Camera
+        fields = '__all__'

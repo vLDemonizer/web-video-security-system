@@ -24,8 +24,16 @@ class Day(models.Model):
     camera = models.ForeignKey(Camera, on_delete=None)
 
     @property
+    def folder_path(self):
+        return '{0}/{1}/{2}/'.format(
+            settings.MEDIA_ROOT,
+            self.camera.node.identifier,
+            self.camera.identifier
+        )
+
+    @property
     def path(self):
-        return '{0}/{1}/{2}/{3}.mp4'.format(
+        return '{0}/{1}/{2}/{3}'.format(
             settings.MEDIA_ROOT,
             self.camera.node.identifier,
             self.camera.identifier, 
@@ -34,9 +42,12 @@ class Day(models.Model):
     
     @property
     def url(self):
-        return '{0}/{1}/{2}/{3}.mp4'.format(
+        return '{0}{1}/{2}/{3}.mp4'.format(
             settings.MEDIA_URL,
             self.camera.node.identifier,
             self.camera.identifier, 
             self.name
         )
+    
+    def __str__(self):
+        return self.name
