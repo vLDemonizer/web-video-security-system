@@ -5,36 +5,44 @@ import subprocess
 import shlex
 
 from django.conf import settings
-from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic.list import ListView
 
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 from rest_framework.viewsets import ModelViewSet
 
+from . import forms
 from system import models, serializers
 
 
-class IndexView(TemplateView):
+
+class IndexView(LoginRequiredMixin, ListView):
+    model = models.Node
+    paginate_by = 100
     template_name = 'base.html'
+    login_url = reverse_lazy('backend-log-in')
 
 
-class NodeViewSet(ModelViewSet):
+class NodeViewSet(LoginRequiredMixin, ModelViewSet):
     lookup_field = 'identifier'
     queryset = models.Node.objects.all()
     serializer_class = serializers.NodeSerializer
+    login_url = reverse_lazy('backend-log-in')
 
-
+@login_required
 def getNode(request):
     identifier = request.POST.get('identifier')
     print(identifier)
     node = get_object_or_404(models.Node, identifier=identifier)
     return JsonResponse({identifier: node.identifier})
 
-
+@login_required
 def handleVideoFeed(request):
     video_file = request.FILES.get('video')
     video_id = request.POST.get('videoId')
@@ -80,7 +88,23 @@ def handleVideoFeed(request):
     
     return JsonResponse({'foo': video_id})
 
-def login(request):
+def backend_login(request):
+    print(request.method)
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return redirect('log-out')
+
+    return render(request, 'registration/login.html')
+
+def front_login(request):
     username = request.POST.get('username')
     password = request.POST.get('pass')
     response = False
@@ -92,3 +116,17 @@ def login(request):
         response = True
     
     return JsonResponse({'login': response})
+
+@login_required  
+def signup(request):
+    if request.method == 'POST':
+        form = forms.SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            return redirect('index')
+    else:
+        form = forms.SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})
