@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.auth.views import login, logout
 from django.urls import path
 
 from rest_framework import routers
@@ -31,8 +32,13 @@ urlpatterns = [
     path('video-stream/', views.handleVideoFeed, name='video-feed'),
     path('get-node/', views.getNode, name='get-node'),
     path('get-cameras/<identifier>/', views.CameraApiView.as_view(), name='api-cameras'),
-    path('log-in/', views.login, name='log-in'),
+    path('backend-log-in', views.backend_login, name='backend-log-in'),
+    path('log-in/', views.front_login, name='log-in'),
     path('sign-up/', views.signup, name='sign-up'),
+    path('log-out/', logout, name='log-out'),
+    path('create-node/', views.CreateNodeView.as_view(), name='create-node'),
+    path('node-camera/<identifier>/', views.GetNodeCameraView.as_view(), name='node-camera'),
+    path('node-camera/video-camera/<identifier>/', views.CameraVideoView.as_view(), name='video-camera')
 ] 
 
 urlpatterns += router.urls + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \

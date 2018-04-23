@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block navbar %} 
+    {{block.super}} 
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+        <li class="breadcrumb-item active">Create Node</li>
+    {% endblock %}
+
+{% block tables %}
+    {% csrf_token %}
+    <form method="POST">
+        <div class="form-group">
+            <div class="form-row">
+                <div class="col-md-6">
+                <label for="id_identifier">Identifier</label>
+                <input class="form-control" name="identifier" id="id_identifier" type="text" aria-describedby="nameHelp" placeholder="Enter Identifier">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+        <label for="id_description">Description</label>
+        <textarea class="form-control" name="description" id="id_description" rows="9"></textarea>
+        </div>
+        <button class="btn btn-primary btn-block" type="Submit" value="Save">Register</button>
+    </form>  
+{% endblock %}

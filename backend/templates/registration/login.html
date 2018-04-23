@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="card card-login mx-auto mt-5">
+        <div class="card-header">Login</div>
+        <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            {{form.errors}}
+            <div class="form-group">
+            <label for="exampleInputEmail1">Username</label>
+            <input class="form-control" name="username" id="id_username" type="text" aria-describedby="emailHelp" placeholder="Enter Username">
+            </div>
+            <div class="form-group">
+            <label for="exampleInputPassword1">Password</label>
+            <input class="form-control" name="password" id="id_password" type="password" placeholder="Password">
+            </div>
+            <button class="btn btn-primary btn-block" type="submit">Login</button>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

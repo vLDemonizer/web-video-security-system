@@ -5,12 +5,15 @@ import subprocess
 import shlex
 
 from django.conf import settings
-from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
+from django.views.generic.list import ListView
 
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 
@@ -19,18 +22,48 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
+from . import forms
 from system import models, serializers
 
 
-class IndexView(TemplateView):
-    template_name = 'index.html'
+
+class IndexView(LoginRequiredMixin, ListView):
+    model = models.Node
+    template_name = 'base.html'
+    login_url = reverse_lazy('backend-log-in')
 
 
-class NodeViewSet(ModelViewSet):
+class NodeViewSet(LoginRequiredMixin, ModelViewSet):
     lookup_field = 'identifier'
     queryset = models.Node.objects.all()
     serializer_class = serializers.NodeSerializer
+    login_url = reverse_lazy('backend-log-in')
 
+class CreateNodeView(LoginRequiredMixin,CreateView):
+    model = models.Node
+    template_name = 'dashboard/create-node.html'
+    success_url = reverse_lazy('index')
+    login_url = reverse_lazy('backend-log-in')
+    fields = ['identifier', 'description']
+
+
+class GetNodeCameraView(LoginRequiredMixin, ListView):
+    #login_url = reverse_lazy('backend-log-in')
+    model = models.Camera
+    template_name = 'dashboard/node-camera.html'
+    queryset = None
+
+    def get_queryset(self):
+        return models.Camera.objects.filter(node=self.kwargs['identifier'])
+
+
+class CameraVideoView(LoginRequiredMixin, ListView):
+    model = models.Day
+    template_name = 'dashboard/video-camera.html'
+    queryset = None
+
+    def get_queryset(self):
+        return models.Day.objects.filter(camera=self.kwargs['identifier'])
 
 class CameraApiView(APIView):
     renderer_classes = (JSONRenderer,)
@@ -57,13 +90,14 @@ class CameraApiView(APIView):
         return Response(data=ser.data)
  
 
+@login_required
 def getNode(request):
     identifier = request.POST.get('identifier')
     print(identifier)
     node = get_object_or_404(models.Node, identifier=identifier)
     return JsonResponse({identifier: node.identifier})
 
-
+@login_required
 def handleVideoFeed(request):
     video_file = request.FILES.get('video')
     camera_identifier = request.POST.get('camera')
@@ -111,7 +145,23 @@ def handleVideoFeed(request):
     
     return JsonResponse({'foo': True})
 
-def login(request):
+def backend_login(request):
+    print(request.method)
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            return redirect('log-out')
+
+    return render(request, 'registration/login.html')
+
+def front_login(request):
     username = request.POST.get('username')
     password = request.POST.get('pass')
     response = False
@@ -124,9 +174,10 @@ def login(request):
     
     return JsonResponse({'login': response})
 
+@login_required  
 def signup(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = forms.SignUpForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -134,5 +185,5 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)
             return redirect('index')
     else:
-        form = UserCreationForm()
-    return render(request, 'signup.html', {'form': form})
+        form = forms.SignUpForm()
+    return render(request, 'registration/signup.html', {'form': form})
