@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block navbar %} 
+    {{block.super}} 
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+        <li class="breadcrumb-item active">Video</li>
+{% endblock %}
+{% block tables %}
+    <video src="{{ object.url }}"></video>
+{% endblock %}

@@ -38,7 +38,8 @@ urlpatterns = [
     path('log-out/', logout, name='log-out'),
     path('create-node/', views.CreateNodeView.as_view(), name='create-node'),
     path('node-camera/<identifier>/', views.GetNodeCameraView.as_view(), name='node-camera'),
-    path('node-camera/video-camera/<identifier>/', views.CameraVideoView.as_view(), name='video-camera')
+    path('node-camera/video-camera/<identifier>/', views.CameraVideoView.as_view(), name='video-camera'),
+    path('node-camera/video-camera/video/<pk>', views.VideoView.as_view(), name='video'),
 ] 
 
 urlpatterns += router.urls + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \

@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
@@ -65,6 +66,10 @@ class CameraVideoView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return models.Day.objects.filter(camera=self.kwargs['identifier'])
 
+class VideoView(LoginRequiredMixin, DetailView):
+    model = models.Day
+    template_name = 'dashboard/video.html'
+
 class CameraApiView(APIView):
     renderer_classes = (JSONRenderer,)
 
@@ -93,7 +98,7 @@ class CameraApiView(APIView):
 def getNode(request):
     identifier = request.POST.get('identifier')
     node = get_object_or_404(models.Node, identifier=identifier)
-    return JsonResponse({identifier: node.identifier})
+    return JsonResponse({'identifier': node.identifier})
 
 
 def handleVideoFeed(request):
@@ -142,6 +147,7 @@ def handleVideoFeed(request):
     print(output)
     
     return JsonResponse({'foo': True})
+
 
 def backend_login(request):
     print(request.method)

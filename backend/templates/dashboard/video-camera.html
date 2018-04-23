@@ -28,7 +28,12 @@
                 <tbody>
                     {% for node in object_list %}
                         <tr>
-                            
+                            <td>{{ node.name }}</td>
+                            <td>
+                                <a href="{% url 'video' pk=node.pk %}">
+                                    <i class="fa fa-video-camera"></i> 
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

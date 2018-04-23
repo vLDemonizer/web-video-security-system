@@ -25,7 +25,7 @@ class Node extends Component {
         let form = new FormData();
         form.append('identifier', identifier)
         axios.post(this.props.ip + '/get-node/', form)
-            .then(response => this.props.setNode(response.data.root))
+            .then(response => this.props.setNode(response.data.identifier))
             .catch(error => this.setState({invalidInput: true}))
     }
 
