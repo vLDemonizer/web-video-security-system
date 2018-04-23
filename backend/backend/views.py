@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 
 from moviepy.editor import VideoFileClip, concatenate_videoclips
@@ -24,7 +25,6 @@ from system import models, serializers
 
 class IndexView(LoginRequiredMixin, ListView):
     model = models.Node
-    paginate_by = 100
     template_name = 'base.html'
     login_url = reverse_lazy('backend-log-in')
 
@@ -34,6 +34,32 @@ class NodeViewSet(LoginRequiredMixin, ModelViewSet):
     queryset = models.Node.objects.all()
     serializer_class = serializers.NodeSerializer
     login_url = reverse_lazy('backend-log-in')
+
+class CreateNodeView(LoginRequiredMixin,CreateView):
+    model = models.Node
+    template_name = 'dashboard/create-node.html'
+    success_url = reverse_lazy('index')
+    login_url = reverse_lazy('backend-log-in')
+    fields = ['identifier', 'description']
+
+
+class GetNodeCameraView(LoginRequiredMixin, ListView):
+    #login_url = reverse_lazy('backend-log-in')
+    model = models.Camera
+    template_name = 'dashboard/node-camera.html'
+    queryset = None
+
+    def get_queryset(self):
+        return models.Camera.objects.filter(node=self.kwargs['identifier'])
+
+
+class CameraVideoView(LoginRequiredMixin, ListView):
+    model = models.Day
+    template_name = 'dashboard/video-camera.html'
+    queryset = None
+
+    def get_queryset(self):
+        return models.Day.objects.filter(camera=self.kwargs['identifier'])
 
 @login_required
 def getNode(request):

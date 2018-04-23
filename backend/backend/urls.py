@@ -35,6 +35,9 @@ urlpatterns = [
     path('log-in/', views.front_login, name='log-in'),
     path('sign-up/', views.signup, name='sign-up'),
     path('log-out/', logout, name='log-out'),
+    path('create-node/', views.CreateNodeView.as_view(), name='create-node'),
+    path('node-camera/<identifier>/', views.GetNodeCameraView.as_view(), name='node-camera'),
+    path('node-camera/video-camera/<identifier>/', views.CameraVideoView.as_view(), name='video-camera')
 ] 
 
 urlpatterns += router.urls + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \

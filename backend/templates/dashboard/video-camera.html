@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block navbar %} 
+    {{block.super}} 
+{% endblock %}
+{% block breadcrumbs %}
+    {{ block.super }}
+        <li class="breadcrumb-item">
+            <a href="{% url 'node-camera' identifier=view.kwargs.identifier %}">Cameras</a>
+            
+        </li>
+        <li class="breadcrumb-item active">Video</li>
+{% endblock %}
+{% block tables %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <i class="fa fa-video-camera"></i> 
+            Video Table
+        </div>
+        <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Video</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for node in object_list %}
+                        <tr>
+                            
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        </div>
+        <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+    </div>
+{% endblock %}
